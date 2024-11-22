@@ -5,9 +5,11 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 64
+        discriminator:
+          ignore_explicit_for_joined: true
     open-in-view: false
