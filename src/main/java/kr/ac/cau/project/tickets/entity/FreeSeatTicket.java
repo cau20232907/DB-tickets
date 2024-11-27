@@ -8,5 +8,5 @@ import jakarta.persistence.ManyToOne;
 @DiscriminatorValue("F")
 public class FreeSeatTicket extends Ticket {
     @ManyToOne
-    private Seat seat;
+    private SeatGrade seat;
 }

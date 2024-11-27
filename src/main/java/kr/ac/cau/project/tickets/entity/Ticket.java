@@ -12,6 +12,8 @@ public abstract class Ticket {
     @GeneratedValue
     private Long id;
     @ManyToOne
+    private Payment payment;
+    @ManyToOne
     private ConcertDate concertDate;
     private LocalDateTime purchaseTime;
     private Boolean isOnline;
