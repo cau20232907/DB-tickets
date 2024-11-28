@@ -1,9 +1,7 @@
 package kr.ac.cau.project.tickets.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -15,18 +13,22 @@ import java.time.LocalDateTime;
  * 결제는 구매에 성공했는지 확인 후 진행
  */
 @Entity
+@Data //우선 전부 연 후 나중에 닫음, 팀원의 Java 이해도 고려
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class TransactionQueue {
     @Id
     @GeneratedValue
     private Long id;
     private LocalDateTime time;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private ConcertDate concertDate;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private SeatGrade seatGrade;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Seat seat;
     private Boolean isOnline;
 }
