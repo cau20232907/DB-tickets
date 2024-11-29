@@ -1,17 +1,24 @@
 package kr.ac.cau.project.tickets;
 
+import kr.ac.cau.project.tickets.cli.MemberCli;
+import kr.ac.cau.project.tickets.cli.StaffCli;
+import kr.ac.cau.project.tickets.entity.EventStaff;
+import kr.ac.cau.project.tickets.entity.Member;
+import kr.ac.cau.project.tickets.entity.Userinfo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import java.util.*;
-import java.sql.*;
 
 
 
 import java.util.Scanner;
 
 @SpringBootApplication
+@RequiredArgsConstructor
 public class TicketsApplication implements CommandLineRunner {
+	private final MemberCli memberCli;
+	private final StaffCli staffCli;
 
 		public static void main(String[] args){
 		SpringApplication.run(TicketsApplication.class, args);
@@ -21,7 +28,8 @@ public class TicketsApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception{
-		Connector connector = new Connector();
+
+		/*Connector connector = new Connector();
 		connector.dbConnection();
 		Statement state = connector.dbconn.createStatement();
 		ResultSet result = state.executeQuery("select id, name, dept_name from university.student order by name");
@@ -39,9 +47,6 @@ public class TicketsApplication implements CommandLineRunner {
 			count++;
 		}
 
-		String inputString;
-		System.out.println("Ticketing DB");
-		Scanner input = new Scanner(System.in);
 		while (result.next()) {
 			System.out.print("1. Show events\n2. Make reservation\n3. Exit\n");
 			inputString = input.next();
@@ -51,27 +56,48 @@ public class TicketsApplication implements CommandLineRunner {
 					inputString = input.next();
 					break;
 				case "2":
-
 			}
 		}
 
 		result.close();
 		state.close();
-		connector.dbClose();
-	}
+		connector.dbClose();*/
 
-	/**
-	 * Callback used to run the bean.
-	 *
-	 * @param args incoming main method arguments
-	 */
-	@Override
-	public void run(String... args) {
-		//CLI 구현 위치
-		System.out.println("CLI start!");
+		String ID;
+		String password;
+		String userInput;
+		Userinfo user1=null;
 		Scanner input = new Scanner(System.in);
-		while (true) {
-			System.out.println(input.next());
+		System.out.println("Ticketing DB");
+		while(true){
+			System.out.println("Login page");
+			System.out.println("Id: ");
+			ID = input.next();
+			System.out.println("Password: ");
+			password = input.next();
+			{
+				//TODO userinfo table과 id, password 비교해서 로그인
+			}
+
+			if (user1==null){
+				System.out.println(";;");
+			} else if (user1 instanceof Member member) {
+				memberCli.run(member);
+			} else if (user1 instanceof EventStaff staff){
+				staffCli.run(staff);
+			}
+//			if(user1.getUsername() == ){
+//				System.out.println("1. Show Payment log\n2. Show Transaction queue log\n3. ");
+//				userInput = input.next();
+//			}
+//			else if (user1.get){
+//				System.out.println("1. Show Events\n2. ");
+//				userInput = input.next();
+//				switch(userInput){
+//					case "1":
+//
+//				}
+//			}
 		}
 	}
 }

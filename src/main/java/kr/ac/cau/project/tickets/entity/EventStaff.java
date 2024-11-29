@@ -12,9 +12,7 @@ import lombok.*;
 @Entity
 @DiscriminatorValue("S")
 @Data //우선 전부 연 후 나중에 닫음, 팀원의 Java 이해도 고려
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class EventStaff extends Userinfo{
     //회사 이름, 사업자등록번호 등이 들어갈 수 있음
 }

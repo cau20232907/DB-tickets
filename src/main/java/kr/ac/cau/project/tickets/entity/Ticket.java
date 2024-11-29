@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @Data //우선 전부 연 후 나중에 닫음, 팀원의 Java 이해도 고려
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public abstract class Ticket {
     @Id
     @GeneratedValue
