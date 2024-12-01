@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data //우선 전부 연 후 나중에 닫음, 팀원의 Java 이해도 고려
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReservedSeatNonpaidTicket extends Ticket {
+public class ReservedSeatNonpaidTicket extends NonpaidTicket {
     @ManyToOne(fetch = FetchType.LAZY)
     private Seat seat;
 }

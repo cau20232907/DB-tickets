@@ -2,7 +2,10 @@ package kr.ac.cau.project.tickets.entity;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import kr.ac.cau.project.tickets.repository.UserinfoRepository;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * 회원(일반회원)
@@ -15,4 +18,5 @@ import lombok.*;
 @AllArgsConstructor
 public class Member extends Userinfo{
     //이름, 연락처 등이 들어갈 수 있음
+
 }

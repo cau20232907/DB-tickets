@@ -10,8 +10,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-
-
 import java.util.Scanner;
 
 @SpringBootApplication
@@ -19,6 +17,7 @@ import java.util.Scanner;
 public class TicketsApplication implements CommandLineRunner {
 	private final MemberCli memberCli;
 	private final StaffCli staffCli;
+	private final DataInitializer dataInitializer;
 
 		public static void main(String[] args){
 		SpringApplication.run(TicketsApplication.class, args);
@@ -28,7 +27,7 @@ public class TicketsApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception{
-
+		dataInitializer.run();		// db 테이블 초기설정
 		String ID;
 		String password;
 		String userInput;
@@ -38,11 +37,14 @@ public class TicketsApplication implements CommandLineRunner {
 		while(true){
 			System.out.println("Login page");
 			System.out.println("Id: ");
-			ID = input.next();
+			//ID = input.next();
 			System.out.println("Password: ");
-			password = input.next();
+			//password = input.next();
 			{
 				//TODO userinfo table과 id, password 비교해서 로그인
+				Member member = new Member();	// 디버깅용 시험코드
+				member.setUsername("root");
+				memberCli.run(member);
 			}
 
 			if (user1 == null){
