@@ -5,6 +5,7 @@ import kr.ac.cau.project.tickets.cli.StaffCli;
 import kr.ac.cau.project.tickets.entity.EventStaff;
 import kr.ac.cau.project.tickets.entity.Member;
 import kr.ac.cau.project.tickets.entity.Userinfo;
+import kr.ac.cau.project.tickets.repository.UserinfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -19,6 +20,8 @@ import java.util.Scanner;
 public class TicketsApplication implements CommandLineRunner {
 	private final MemberCli memberCli;
 	private final StaffCli staffCli;
+
+	private final UserinfoRepository userinfoRepository;
 
 		public static void main(String[] args){
 		SpringApplication.run(TicketsApplication.class, args);
@@ -63,6 +66,12 @@ public class TicketsApplication implements CommandLineRunner {
 		state.close();
 		connector.dbClose();*/
 
+//		EventStaff exampleStaff = new EventStaff();
+//		exampleStaff.setUsername("user1");
+//		userinfoRepository.save(exampleStaff);
+
+		EventStaff exampleStaff = (EventStaff) userinfoRepository.findById(1L).orElse(null);
+
 		String ID;
 		String password;
 		String userInput;
@@ -77,6 +86,7 @@ public class TicketsApplication implements CommandLineRunner {
 			password = input.next();
 			{
 				//TODO userinfo table과 id, password 비교해서 로그인
+				user1 = exampleStaff;
 			}
 
 			if (user1==null){

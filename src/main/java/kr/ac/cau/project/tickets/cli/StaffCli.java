@@ -1,16 +1,14 @@
 package kr.ac.cau.project.tickets.cli;
 
-import kr.ac.cau.project.tickets.entity.Cast;
-import kr.ac.cau.project.tickets.entity.Concert;
-import kr.ac.cau.project.tickets.entity.ConcertDate;
-import kr.ac.cau.project.tickets.entity.EventStaff;
-import kr.ac.cau.project.tickets.entity.Stadium;
-import kr.ac.cau.project.tickets.repository.ConcertRepository;
+import kr.ac.cau.project.tickets.entity.*;
 import kr.ac.cau.project.tickets.repository.StadiumRepository;
+import kr.ac.cau.project.tickets.service.ConcertService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -18,8 +16,7 @@ import java.util.Scanner;
 @Component
 @RequiredArgsConstructor
 public class StaffCli {
-
-    private final ConcertRepository concertRepository;
+    private final ConcertService concertService;
     private final StadiumRepository stadiumRepository;
 
     public void run(EventStaff eventStaff) {
@@ -36,7 +33,7 @@ public class StaffCli {
                     manageConcert(eventStaff);
                     break;
                 case "2":
-                    // TODO: 처음 로그인 화면으로 되돌아가도록 한다.
+                    // 처음 로그인 화면으로 되돌아가도록 한다.
                     return;
                 default:
                     System.out.println("Invalid option. Try again.");
@@ -56,46 +53,66 @@ public class StaffCli {
             System.out.println("5. Back to Main");
             System.out.println("Select an option:");
 
-            String option = scanner.next();
-            switch (option){
-                case "1":
-                    viewConcerts(eventStaff);
-                    // 여기 구현하려고 ConcertRepository.java 에 findByStaff 메소드 (리스트) 추가했습니다.
-                    // viewConcerts 함수는 아래 쪽에 구현했는데 제대로 했는지 모르겠습니다 ..
-                    // TODO: 관리자가 관리 중인 concert 의 id, 이름 등을 나타낸다.
-                    break;
-                case "2":
-                    addConcert(eventStaff);
-                    // TODO: 관리가가 관리 중인 concert 외에 더 추가한다. 단, 추가하고자 하는 concert 는
-                    // TODO: concert 테이블에 있는 것이어야 한다. (IF 를 통해서 확인)
-                    // TODO: 추가하려는 concert 가 이미 다른 스태프에 의해 관리되고 있는지도 확인해야함
-                    break;
-                case "3":
-                    editConcert(eventStaff);
-                    // TODO: 관리자가 관리 중인 concert 의 정보를 수정한다.
-                    break;
-                case "4":
-                    deleteConcert(eventStaff);
-                    // TODO: 관리자가 관리 중인 concert 의 일부를 지운다. (concert 의 staff 를 null 로)
-                    break;
-                case "5":
-                    // TODO: 메인으로 돌아간다.
-                    return;
-                default:
-                    System.out.println("Invalid option. Try again.");
+            try {
+                String option = scanner.next();
+                switch (option) {
+                    case "1":
+                        viewConcerts(eventStaff);
+                        // 여기 구현하려고 ConcertRepository.java 에 findByStaff 메소드 (리스트) 추가했습니다.
+                        // viewConcerts 함수는 아래 쪽에 구현했는데 제대로 했는지 모르겠습니다 ..
+                        // 관리자가 관리 중인 concert 의 id, 이름 등을 나타낸다.
+                        break;
+                    case "2":
+                        addConcert(eventStaff);
+                        // 관리가가 관리 중인 concert 외에 더 추가한다. 단, 추가하고자 하는 concert 는
+                        // concert 테이블에 있는 것이어야 한다. (IF 를 통해서 확인)
+                        // 추가하려는 concert 가 이미 다른 스태프에 의해 관리되고 있는지도 확인해야함
+                        break;
+                    case "3":
+                        editConcert(eventStaff);
+                        // 관리자가 관리 중인 concert 의 정보를 수정한다.
+                        break;
+                    case "4":
+                        deleteConcert(eventStaff);
+                        // 관리자가 관리 중인 concert 의 일부를 지운다. (concert 의 staff 를 null 로)
+                        break;
+                    case "5":
+                        // 메인으로 돌아간다.
+                        return;
+                    default:
+                        System.out.println("Invalid option. Try again.");
+                }
+            } catch (Exception e) {
+                System.out.println("Error occured. Please try again");
             }
         }
     }
 
     private void viewConcerts(EventStaff eventStaff){
-        List<Concert> concerts = concertRepository.findByStaff(eventStaff); // concert list 생성, staff 기준
+        List<Concert> concerts = concertService.findByStaff(eventStaff); // concert list 생성, staff 기준
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         if(concerts.isEmpty()){
             System.out.println("There is no managing concerts.");
         } else{
             System.out.println("------ Managing concerts lists ------");
             for(Concert concert: concerts){     // concert ID 와 Name 을 모두 출력
-                System.out.println("ID: " + concert.getId() + ", Name: " + concert.getConcertName());
+                System.out.println("ID: " + concert.getId() + ", Name: " + concert.getConcertName() +
+                        ", Stadium: " + concert.getStadium().getName());
+
+                List<Cast> casts = concert.getCasts();
+                for (int i = 1; i <= casts.size(); i++) {
+                    Cast cast = casts.get(i - 1);
+                    System.out.println("\t Cast #" + i + ": " + cast.getName());
+                }
+
+                List<ConcertDate> dates = concert.getDates();
+                for (int i = 1; i <= dates.size(); i++) {
+                    ConcertDate concertDate = dates.get(i - 1);
+                    System.out.println("\t Date #" + i + ": " +
+                            concertDate.getStartTime().format(format) + "-" +
+                            concertDate.getEndTime().format(format));
+                }
             }
         }
     }
@@ -114,6 +131,11 @@ public class StaffCli {
 
         Stadium stadium = stadiumRepository.findByName(newStadium); // 새로운 이름에 맞는 stadium 객체를 가져옴
 
+        if (stadium == null) {
+            System.out.println("Invalid stadium");
+            return;
+        }
+
         Concert concert = Concert.builder() // 새로 concert 객체 만들기
                 .concertName(newConcert)
                 .explaination(newExplanation)
@@ -121,39 +143,50 @@ public class StaffCli {
                 .stadium(stadium)
                 .build();
 
-        System.out.println("Start Time (yyyy-MM-dd HH:mm): "); // 시작 시간 입력
-        String newStartTime = scanner.nextLine();
-        LocalDateTime startTime = LocalDateTime.parse(newStartTime);
+        System.out.println("The number of concerts (by time): "); // ConcertDate 수 입력
+        int concertCount = scanner.nextInt();
+        scanner.nextLine(); // consume newline
+        List<ConcertDate> concertDates = new ArrayList<>(concertCount);
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-        System.out.println("End Time (yyyy-MM-dd HH:mm): "); // 종료 시간 입력
-        String newEndTime = scanner.nextLine();
-        LocalDateTime endTime = LocalDateTime.parse(newEndTime);
+        try {
+            for (int i = 1; i <= concertCount; i++) {
+                System.out.println("concert #" + i + ": ");
+                System.out.println("Start Time (yyyy-MM-dd HH:mm): "); // 시작 시간 입력
+                String newStartTime = scanner.nextLine();
+                LocalDateTime startTime = LocalDateTime.parse(newStartTime, format);
+
+                System.out.println("End Time (yyyy-MM-dd HH:mm): "); // 종료 시간 입력
+                String newEndTime = scanner.nextLine();
+                LocalDateTime endTime = LocalDateTime.parse(newEndTime, format);
+
+                concertDates.add(ConcertDate.builder()
+                        .concert(concert)
+                        .startTime(startTime)
+                        .endTime(endTime)
+                        .build());
+            }
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid format");
+            return;
+        }
 
         System.out.println("The number of casts: "); // Cast 수 입력
-        int castCount = scanner.nextInt();
+        byte castCount = scanner.nextByte();
         scanner.nextLine(); // consume newline
 
-        List<Cast> castList = new ArrayList<>();
-        for (int i = 1; i <= castCount; i++) {
+        List<Cast> castList = new ArrayList<>(castCount);
+        for (byte i = 1; i <= castCount; i++) {
             System.out.println("Enter the name of cast #" + i + ": ");
             String castName = scanner.nextLine();
-            Cast cast = Cast.builder().name(castName).seqOrder((byte) i).build();
+            Cast cast = Cast.builder().name(castName).event(concert).seqOrder(i).build();
             castList.add(cast);
         }
 
-        ConcertDate concertDate = ConcertDate.builder() // ConcertDate 도 함께 생성
-                .concert(concert)
-                .startTime(startTime)
-                .endTime(endTime)
-                .build();
-        concert.getDates().add(concertDate);
+        concert.setDates(concertDates);
+        concert.setCasts(castList);
 
-        for (Cast cast : castList) { // Cast 추가 및 연결
-            cast.setEvent(concert);
-            concert.getCasts().add(cast);
-        }
-
-        concertRepository.save(concert);
+        concertService.save(concert);
         System.out.println("------ Concert added to list. ------");
     }
 
@@ -161,10 +194,10 @@ public class StaffCli {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Enter the ID of the concert to edit:"); // 수정하고자 하는 concert id 입력
-        Long id = scanner.nextLong();
+        long id = scanner.nextLong();
         scanner.nextLine();
 
-        Concert concert = concertRepository.findById(id).orElse(null); // id 통해 concert 찾기
+        Concert concert = concertService.findById(id).orElse(null); // id 통해 concert 찾기
         if (concert == null || !concert.getStaff().equals(eventStaff)) { // concert 의 staff 가 아닌 경우도 고려
             System.out.println("Concert not found or there is no access to edit.");
             return;
@@ -172,7 +205,7 @@ public class StaffCli {
 
         // 기존 concert 정보 출력
         System.out.println("------ Current Concert Info ------");
-        System.out.println("Stadium: " + (concert.getStadium()));
+        System.out.println("Stadium: " + concert.getStadium().getName());
         System.out.println("Name: " + concert.getName());
         System.out.println("Concert Name: " + concert.getConcertName());
         System.out.println("Explanation: " + concert.getExplaination());
@@ -190,23 +223,23 @@ public class StaffCli {
             concert.setExplaination(newExplanation);
         }
 
-        concertRepository.save(concert);
+        concertService.save(concert);
         System.out.println("------ Concert Updated. ------");
     }
 
     private void deleteConcert(EventStaff eventStaff){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the ID of the concert to delete:"); // 더 이상 관리하지 않고자 하는 concert ID 입력
-        Long id = scanner.nextLong();
+        long id = scanner.nextLong();
 
-        Concert concert = concertRepository.findById(id).orElse(null); // concert ID 가 없거나
+        Concert concert = concertService.findByIdFetchOnlyStaff(id).orElse(null); // concert ID 가 없거나
         if (concert == null || !concert.getStaff().equals(eventStaff)) { // 해당 concert staff 가 본인이 아니라면
             System.out.println("Concert not found or there is no access to delete it.");
             return;
         }
 
         concert.setStaff(null); // concert 의 staff 필드를 null 로 설정
-        concertRepository.save(concert);
+        concertService.save(concert);
         System.out.println("------ Concert has been removed from management list. ------");
     }
 }

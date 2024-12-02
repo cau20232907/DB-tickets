@@ -21,7 +21,6 @@ public class Concert {
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     private Stadium stadium;
-    private String name;
     @ManyToOne(fetch = FetchType.LAZY)
     private EventStaff staff;
     private String concertName;
