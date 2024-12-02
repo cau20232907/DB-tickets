@@ -1,7 +1,11 @@
 package kr.ac.cau.project.tickets.entity;
 
 import jakarta.persistence.*;
+import kr.ac.cau.project.tickets.repository.ConcertDateRepository;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 공연
@@ -22,4 +26,9 @@ public class Concert {
     private EventStaff staff;
     private String concertName;
     private String explaination;
+
+    @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ConcertDate> dates = new ArrayList<>();
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Cast> casts = new ArrayList<>();
 }

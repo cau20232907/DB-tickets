@@ -1,11 +1,17 @@
 package kr.ac.cau.project.tickets.cli;
 
+import kr.ac.cau.project.tickets.entity.Cast;
 import kr.ac.cau.project.tickets.entity.Concert;
+import kr.ac.cau.project.tickets.entity.ConcertDate;
 import kr.ac.cau.project.tickets.entity.EventStaff;
+import kr.ac.cau.project.tickets.entity.Stadium;
 import kr.ac.cau.project.tickets.repository.ConcertRepository;
+import kr.ac.cau.project.tickets.repository.StadiumRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -14,6 +20,7 @@ import java.util.Scanner;
 public class StaffCli {
 
     private final ConcertRepository concertRepository;
+    private final StadiumRepository stadiumRepository;
 
     public void run(EventStaff eventStaff) {
         Scanner scanner = new Scanner(System.in);
@@ -81,7 +88,7 @@ public class StaffCli {
     }
 
     private void viewConcerts(EventStaff eventStaff){
-        List<Concert> concerts = concertRepository.findByStaff(eventStaff); // concert list 생성
+        List<Concert> concerts = concertRepository.findByStaff(eventStaff); // concert list 생성, staff 기준
 
         if(concerts.isEmpty()){
             System.out.println("There is no managing concerts.");
@@ -96,23 +103,58 @@ public class StaffCli {
     private void addConcert(EventStaff eventStaff){
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Enter the ID of the concert to add:"); // 관리 목록에 추가할 concert ID 입력
-        Long concertId = scanner.nextLong();
+        System.out.println("Enter new concert name: "); // 관리 목록에 추가할 concert name 입력
+        String newConcert = scanner.nextLine();
 
-        Concert concert = concertRepository.findById(concertId).orElse(null);
-        if(concert == null){ // concert 데이터베이스에 추가할 concert ID 가 없다면
-            System.out.println("The concert does not exist.");
-            return;
+        System.out.println("Enter new concert explanation: "); // 관리 목록에 추가할 concert explanation 입력
+        String newExplanation = scanner.nextLine();
+
+        System.out.println("Enter new concert stadium: "); // 관리 목록에 추가할 concert stadium 입력
+        String newStadium = scanner.nextLine();
+
+        Stadium stadium = stadiumRepository.findByName(newStadium); // 새로운 이름에 맞는 stadium 객체를 가져옴
+
+        Concert concert = Concert.builder() // 새로 concert 객체 만들기
+                .concertName(newConcert)
+                .explaination(newExplanation)
+                .staff(eventStaff)
+                .stadium(stadium)
+                .build();
+
+        System.out.println("Start Time (yyyy-MM-dd HH:mm): "); // 시작 시간 입력
+        String newStartTime = scanner.nextLine();
+        LocalDateTime startTime = LocalDateTime.parse(newStartTime);
+
+        System.out.println("End Time (yyyy-MM-dd HH:mm): "); // 종료 시간 입력
+        String newEndTime = scanner.nextLine();
+        LocalDateTime endTime = LocalDateTime.parse(newEndTime);
+
+        System.out.println("The number of casts: "); // Cast 수 입력
+        int castCount = scanner.nextInt();
+        scanner.nextLine(); // consume newline
+
+        List<Cast> castList = new ArrayList<>();
+        for (int i = 1; i <= castCount; i++) {
+            System.out.println("Enter the name of cast #" + i + ": ");
+            String castName = scanner.nextLine();
+            Cast cast = Cast.builder().name(castName).seqOrder((byte) i).build();
+            castList.add(cast);
         }
 
-        if(concert.getStaff() != null){ // concert ID 는 존재하는데, 해당 concert 가 다른 staff 를 가진다면
-            System.out.println("This concert is already being managed by another staff.");
-            return;
+        ConcertDate concertDate = ConcertDate.builder() // ConcertDate 도 함께 생성
+                .concert(concert)
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
+        concert.getDates().add(concertDate);
+
+        for (Cast cast : castList) { // Cast 추가 및 연결
+            cast.setEvent(concert);
+            concert.getCasts().add(cast);
         }
 
-        concert.setStaff(eventStaff); // concert 의 staff 를 추가
         concertRepository.save(concert);
-        System.out.println("------ Concert added to management list. ------");
+        System.out.println("------ Concert added to list. ------");
     }
 
     private void editConcert(EventStaff eventStaff){
