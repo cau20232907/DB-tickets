@@ -22,7 +22,7 @@ public class TransactionQueue {
     @GeneratedValue
     private Long id;
     private LocalDateTime time;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) // cascade = CascadeType.ALL
     private Member member;
     @ManyToOne(fetch = FetchType.LAZY)
     private ConcertDate concertDate;

@@ -22,6 +22,6 @@ public class TransactionQueueApi {
     }
 
     static void insert(TransactionQueue tuple){
-        TransactionQueueRepository.saveAndFlush(tuple); //saveAndFlush??
+        TransactionQueueRepository.saveAndFlush(tuple);
     }
 }

@@ -16,7 +16,7 @@ public class DiscountOptionsApi {
         DiscountOptionsApi.DiscountOptionsRepository = discountOptionsRepository;
     }
 
-    static List<DiscountOptions> findAllDiscountOptions(){
+    public static List<DiscountOptions> findAllDiscountOptions(){
         return DiscountOptionsRepository.findAll();
     }
 }

@@ -14,19 +14,22 @@ public class DataInitializer{
     private final ConcertDateRepository concertDateRepository;
     private final SeatGradeRepository seatGradeRepository;
     private final SeatRepository seatRepository;
+    private final DiscountOptionsRepository discountOptionsRepository;
 
     public DataInitializer(UserinfoRepository userinfoRepository,
                            StadiumRepository stadiumRepository,
                            ConcertRepository concertRepository,
                            ConcertDateRepository concertDateRepository,
                            SeatGradeRepository seatGradeRepository,
-                           SeatRepository seatRepository) {
+                           SeatRepository seatRepository,
+                           DiscountOptionsRepository discountOptionsRepository) {
         this.userinfoRepository = userinfoRepository;
         this.stadiumRepository = stadiumRepository;
         this.concertRepository = concertRepository;
         this.concertDateRepository = concertDateRepository;
         this.seatGradeRepository = seatGradeRepository;
         this.seatRepository = seatRepository;
+        this.discountOptionsRepository = discountOptionsRepository;
     }
 
     public void run(){
@@ -81,5 +84,13 @@ public class DataInitializer{
         seatRepository.save(seatS1);
         seatRepository.save(seatS2);
 
+        DiscountOptions discountOptions1 = new DiscountOptions();
+        DiscountOptions discountOptions2 = new DiscountOptions();
+        discountOptions1.setType("card");
+        discountOptions1.setDiscountRate(0.1);
+        discountOptions2.setType("army");
+        discountOptions2.setDiscountRate(0.05);
+        discountOptionsRepository.save(discountOptions1);
+        discountOptionsRepository.save(discountOptions2);
     }
 }

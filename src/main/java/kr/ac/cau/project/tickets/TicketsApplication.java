@@ -33,6 +33,7 @@ public class TicketsApplication implements CommandLineRunner {
 		String userInput;
 		Userinfo user1=null;
 		Scanner input = new Scanner(System.in);
+		Member member = new Member();
 		System.out.println("Ticketing DB");
 		while(true){
 			System.out.println("Login page");
@@ -42,15 +43,14 @@ public class TicketsApplication implements CommandLineRunner {
 			//password = input.next();
 			{
 				//TODO userinfo table과 id, password 비교해서 로그인
-				Member member = new Member();	// 디버깅용 시험코드
-				member.setUsername("root");
+				member.setUsername("root");		// 디버깅용 시험코드
 				memberCli.run(member);
 			}
 
 			if (user1 == null){
 				System.out.println(";;");
-			} else if (user1 instanceof Member member) {
-				memberCli.run(member);
+			} else if (user1 instanceof Member member1) {
+				memberCli.run(member1);
 			} else if (user1 instanceof EventStaff staff){
 				staffCli.run(staff);
 			}
