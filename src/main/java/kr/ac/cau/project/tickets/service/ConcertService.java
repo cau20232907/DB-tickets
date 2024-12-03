@@ -40,6 +40,7 @@ public class ConcertService {
         return concertRepository.findByIdFetchOnlyStaff(id);
     }
 
+    @Transactional
     public void save(Concert concert) {
         concertRepository.save(concert);
     }
