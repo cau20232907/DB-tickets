@@ -1,9 +1,14 @@
 package kr.ac.cau.project.tickets.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 결제 정보 제외 다른 정보 임시 저장(일단 결제를 빼는 방향으로 설계함)
@@ -22,7 +27,7 @@ public class TransactionQueue {
     @GeneratedValue
     private Long id;
     private LocalDateTime time;
-    @ManyToOne(fetch = FetchType.LAZY) // cascade = CascadeType.ALL
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
     @ManyToOne(fetch = FetchType.LAZY)
     private ConcertDate concertDate;
@@ -30,5 +35,17 @@ public class TransactionQueue {
     private SeatGrade seatGrade;
     @ManyToOne(fetch = FetchType.LAZY)
     private Seat seat;
-    private Boolean isOnline;
+    private LocalDateTime requestTime; //요청한 시간, 이게 ticket의 시간이 됨
+    //private Boolean isOnline;
+
+    public List<TransactionQueue> copyBySeat(List<Seat> seats) {
+        return seats.stream().map(seat1 ->
+            TransactionQueue.builder()
+                    .time(getTime())
+                    .member(getMember())
+                    .concertDate(getConcertDate())
+                    .seatGrade(getSeatGrade())
+                    .seat(seat1).build()
+        ).collect(Collectors.toList());
+    }
 }

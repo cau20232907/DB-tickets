@@ -31,11 +31,6 @@ public class EachNonpaidTicketRepository    {
     }
 
     public void insertFreeSeatNonpaidTicket(FreeSeatNonpaidTicket fsNonpaidTicket){
-        em.createQuery("insert into FreeSeatNonpaidTicket(concertDate, isOnline, delivery, purchaseTime, seat) " +
-                "values ("+fsNonpaidTicket.getConcertDate()+","
-                +fsNonpaidTicket.getIsOnline()+","
-                +fsNonpaidTicket.getDelivery()+","
-                +fsNonpaidTicket.getPurchaseTime()+","
-                +fsNonpaidTicket.getSeat()+")");
+        em.persist(fsNonpaidTicket);
     }
 }

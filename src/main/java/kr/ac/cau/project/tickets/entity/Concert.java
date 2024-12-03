@@ -1,10 +1,10 @@
 package kr.ac.cau.project.tickets.entity;
 
 import jakarta.persistence.*;
-import kr.ac.cau.project.tickets.repository.ConcertRepository;
-import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 공연

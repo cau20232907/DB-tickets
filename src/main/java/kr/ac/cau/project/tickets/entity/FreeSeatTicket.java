@@ -18,4 +18,9 @@ import lombok.*;
 public class FreeSeatTicket extends Ticket {
     @ManyToOne(fetch = FetchType.LAZY)
     private SeatGrade seat;
+
+    @Override
+    public SeatGrade getSeatGrade() {
+        return getSeat();
+    }
 }

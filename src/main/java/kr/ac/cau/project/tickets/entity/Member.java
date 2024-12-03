@@ -2,10 +2,9 @@ package kr.ac.cau.project.tickets.entity;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import kr.ac.cau.project.tickets.repository.UserinfoRepository;
-import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 회원(일반회원)

@@ -17,7 +17,7 @@ import java.util.Scanner;
 public class TicketsApplication implements CommandLineRunner {
 	private final MemberCli memberCli;
 	private final StaffCli staffCli;
-	private final DataInitializer dataInitializer;
+	//private final DataInitializer dataInitializer;
 
 		public static void main(String[] args){
 		SpringApplication.run(TicketsApplication.class, args);
@@ -27,7 +27,7 @@ public class TicketsApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception{
-		dataInitializer.run();		// db 테이블 초기설정
+		//dataInitializer.run();		// db 테이블 초기설정
 		String ID;
 		String password;
 		String userInput;

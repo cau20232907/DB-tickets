@@ -21,9 +21,11 @@ public abstract class NonpaidTicket {
     @GeneratedValue
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
     private ConcertDate concertDate;
     private Boolean isOnline;
-    @ManyToOne(fetch = FetchType.LAZY) //여러 티켓이 한 번에 배송될 수 있음
-    private Delivery delivery;
+//    @ManyToOne(fetch = FetchType.LAZY) //여러 티켓이 한 번에 배송될 수 있음
+//    private Delivery delivery;
     private LocalDateTime purchaseTime;
 }

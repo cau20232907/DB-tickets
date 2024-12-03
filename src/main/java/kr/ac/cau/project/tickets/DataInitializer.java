@@ -2,11 +2,11 @@ package kr.ac.cau.project.tickets;
 
 import kr.ac.cau.project.tickets.entity.*;
 import kr.ac.cau.project.tickets.repository.*;
-import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Component
+@RequiredArgsConstructor
 public class DataInitializer{
     private final UserinfoRepository userinfoRepository;
     private final StadiumRepository stadiumRepository;
@@ -15,22 +15,6 @@ public class DataInitializer{
     private final SeatGradeRepository seatGradeRepository;
     private final SeatRepository seatRepository;
     private final DiscountOptionsRepository discountOptionsRepository;
-
-    public DataInitializer(UserinfoRepository userinfoRepository,
-                           StadiumRepository stadiumRepository,
-                           ConcertRepository concertRepository,
-                           ConcertDateRepository concertDateRepository,
-                           SeatGradeRepository seatGradeRepository,
-                           SeatRepository seatRepository,
-                           DiscountOptionsRepository discountOptionsRepository) {
-        this.userinfoRepository = userinfoRepository;
-        this.stadiumRepository = stadiumRepository;
-        this.concertRepository = concertRepository;
-        this.concertDateRepository = concertDateRepository;
-        this.seatGradeRepository = seatGradeRepository;
-        this.seatRepository = seatRepository;
-        this.discountOptionsRepository = discountOptionsRepository;
-    }
 
     public void run(){
         Member member = new Member();
