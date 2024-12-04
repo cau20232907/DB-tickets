@@ -14,7 +14,7 @@ import lombok.*;
 @Builder
 public class Credential {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
     @OneToOne(fetch = FetchType.LAZY) //소셜로그인을 도입하거나 2차인증을 도입하면 ManyToOne이 맞음
     private Userinfo userinfo;

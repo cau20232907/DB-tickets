@@ -4,7 +4,10 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * 스탠딩티켓
@@ -16,6 +19,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FreeSeatTicket extends Ticket {
+    public FreeSeatTicket(FreeSeatNonpaidTicket nonpaidTicket, Payment payment) {
+        super(nonpaidTicket.getId(), payment, nonpaidTicket.getConcertDate(),
+                nonpaidTicket.getPurchaseTime(), nonpaidTicket.getIsOnline(), null);
+        this.seat = nonpaidTicket.getSeat();
+    }
+
     @ManyToOne(fetch = FetchType.LAZY)
     private SeatGrade seat;
 

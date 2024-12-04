@@ -17,5 +17,4 @@ import lombok.EqualsAndHashCode;
 @AllArgsConstructor
 public class Member extends Userinfo{
     //이름, 연락처 등이 들어갈 수 있음
-
 }

@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public abstract class NonpaidTicket {
     @Id
-    @GeneratedValue
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
