@@ -2,7 +2,9 @@ package kr.ac.cau.project.tickets.entity;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 회원(일반회원)
@@ -15,4 +17,5 @@ import lombok.*;
 @AllArgsConstructor
 public class Member extends Userinfo{
     //이름, 연락처 등이 들어갈 수 있음
+
 }

@@ -18,4 +18,9 @@ import lombok.*;
 public class ReservedSeatTicket extends Ticket {
     @ManyToOne(fetch = FetchType.LAZY)
     private Seat seat;
+
+    @Override
+    public SeatGrade getSeatGrade() {
+        return getSeat().getGrade();
+    }
 }

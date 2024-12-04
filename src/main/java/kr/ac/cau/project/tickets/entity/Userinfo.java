@@ -1,7 +1,9 @@
 package kr.ac.cau.project.tickets.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 회원

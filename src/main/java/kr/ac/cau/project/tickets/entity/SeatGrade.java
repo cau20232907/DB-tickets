@@ -18,4 +18,8 @@ public class SeatGrade {
     private String gradeName;
     @ManyToOne(fetch = FetchType.LAZY)
     private Stadium stadium;
+
+    //추가
+    private int price;
+    private Boolean isFree;
 }

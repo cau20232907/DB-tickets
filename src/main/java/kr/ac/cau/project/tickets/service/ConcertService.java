@@ -18,6 +18,9 @@ public class ConcertService {
     private final ConcertRepository concertRepository;
     private final ConcertDateRepository concertDateRepository;
 
+    public List<Concert> findAll() {
+        return concertRepository.findAll();
+
     public List<Concert> findByStaff(EventStaff staff) {
         List<Concert> concerts = concertRepository.findByStaffOrderByCastsAsc(staff);
         for (Concert concert : concerts) {
