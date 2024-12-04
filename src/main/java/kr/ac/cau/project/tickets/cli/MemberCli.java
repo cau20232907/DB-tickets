@@ -20,29 +20,20 @@ public class MemberCli {
     private final NonpaidTicketService nonpaidTicketService;
     private final PaymentService paymentService;
     private final TicketService ticketService;
+    private final DeliveryService deliveryService;
 
     public void run(Member member) {
-        List<Concert> concertList;
-        Concert selectedConcert;
-        List<ConcertDate> concertDateList;
-        ConcertDate selectedConcertDate;
-        Stadium selectedStadium;
-        List<SeatGrade> seatGradeList;
-        SeatGrade selectedSeatGrade;
-        List<Seat> seatList = null;
-        Delivery delivery = new Delivery();
+//        Delivery delivery = new Delivery();
 //        FreeSeatNonpaidTicket[] fsNonpaidTickets = new FreeSeatNonpaidTicket[4];
 //        for(int i = 0; i < 4; i++) fsNonpaidTickets[i] = new FreeSeatNonpaidTicket();
 //        ReservedSeatNonpaidTicket[] rsNonpaidTickets = new ReservedSeatNonpaidTicket[4];
 //        for(int i = 0; i < 4; i++) rsNonpaidTickets[i] = new ReservedSeatNonpaidTicket();
-        List<DiscountOptions> discountOptionList;
-        DiscountOptions selectedDiscountOption;
 //        FreeSeatTicket[] fsTicket = new FreeSeatTicket[4];
 //        for(int i = 0; i < 4; i++) fsTicket[i] = new FreeSeatTicket();
 //        ReservedSeatTicket[] rsTicket = new ReservedSeatTicket[4];
 //        for(int i = 0; i < 4; i++) rsTicket[i] = new ReservedSeatTicket();
 
-        //UserinfoApi.insert(member);
+        //UserinfoRepository.insert(member);
 
         String userInput;
         Scanner scanner = new Scanner(System.in);
@@ -50,6 +41,14 @@ public class MemberCli {
         userInput = scanner.next();
         switch(userInput){
             case "0": {
+                List<Concert> concertList;
+                Concert selectedConcert;
+                List<ConcertDate> concertDateList;
+                ConcertDate selectedConcertDate;
+                Stadium selectedStadium;
+                List<SeatGrade> seatGradeList;
+                SeatGrade selectedSeatGrade;
+                List<Seat> seatList = null;
                 TransactionQueue queueData = new TransactionQueue();
                 System.out.println("Choose the event");
                 concertList = concertService.findAll();      // 전체 공연 테이블 가져오기
@@ -81,8 +80,7 @@ public class MemberCli {
 
                 boolean isFree = false;
                 {
-                    //TODO SeatGrade 테이블이 해당 등급이 free seat인지 reserved seat인지 구분하는 column 필요할듯
-                    //     isFree를 통해 free seat인지 아닌지 확인한다고 가정
+                    //SeatGrade 테이블이 해당 등급이 free seat인지 reserved seat인지 구분
                     isFree = selectedSeatGrade.getIsFree();
                 }
 
@@ -90,10 +88,10 @@ public class MemberCli {
                 String[] seatNums = null;
                 if (!isFree) {       // 지정석 티켓의 경우 좌석을 직접 고르게 함
                     System.out.println("Choose seat (Maximum 4)");
-                    seatList = seatService.findByGrade(selectedSeatGrade); // 전체 좌석 가져오기
+                    //seatList = seatService.findByGrade(selectedSeatGrade); // 전체 좌석 가져오기
                     {
-                        //TODO 미예약된 좌석만 분류하는 과정 필요
-                        //     seat에 예약 되었는지 확인하는 column이 필요할 수 있음
+                        //미예약된 좌석만 분류하는 과정
+                        seatList = seatService.findRemainingByGrade(selectedConcertDate, selectedSeatGrade);
                     }
                     for (int i = 0; i < seatList.size(); i++) {
                         System.out.println(i + ". " + seatList.get(i).getSeatName());   //전체 좌석 보여주기
@@ -106,6 +104,11 @@ public class MemberCli {
                     System.out.println("Choose number of seats (Maximum 4)");
                     userInput = scanner.next();
                     ticketNum = Integer.parseInt(userInput);
+                }
+
+                if (ticketNum > 4) {
+                    System.out.println("Only up to 4 tickets available.");
+                    break;
                 }
 
                 List<TransactionQueue> tuple;
@@ -142,7 +145,7 @@ public class MemberCli {
 //
 //                    }
 //                    for(int i = 0; i < ticketNum; i++){
-//                        NonpaidTicketApi.insert(rsNonpaidTickets[i]);
+//                        NonpaidTicketService.insert(rsNonpaidTickets[i]);
 //                    }
 //                }
 //                else{               // 자유석 티켓의 경우 좌석등급 정보 포함
@@ -153,11 +156,11 @@ public class MemberCli {
 //                        else fsNonpaidTickets[i].setDelivery(delivery);
 //                        fsNonpaidTickets[i].setSeat(tuple[i].getSeatGrade());
 //                        fsNonpaidTickets[i].setPurchaseTime(tuple[i].getTime());
-//                        FreeSeatNonpaidTicketApi.insert(fsNonpaidTickets[i]);
-//                        FreeSeatNonpaidTicketApi.insert(fsNonpaidTickets[i]);
+//                        FreeSeatNonpaidTicketService.insert(fsNonpaidTickets[i]);
+//                        FreeSeatNonpaidTicketService.insert(fsNonpaidTickets[i]);
 //                    }
 //                    for(int i = 0; i < ticketNum; i++){
-//                        NonpaidTicketApi.insert(fsNonpaidTickets[i]);   // 미결제 티켓 테이블에 티켓 insert
+//                        NonpaidTicketService.insert(fsNonpaidTickets[i]);   // 미결제 티켓 테이블에 티켓 insert
 //                    }
 //                }
 
@@ -167,7 +170,8 @@ public class MemberCli {
                 // 결제 진행
                 System.out.println("Payment in progress");
                 System.out.println("Choose discount option. If None, enter 0");
-                discountOptionList = discountOptionsService.findAll();      // 할인 옵션 보여주기 & 선택
+                // 할인 옵션 보여주기 & 선택
+                List<DiscountOptions> discountOptionList = discountOptionsService.findAll();
                 for(int i = 0; i < discountOptionList.size(); i++){
                     System.out.println((i+1) + ". " + discountOptionList.get(i).getType() + " : " +
                             discountOptionList.get(i).getDiscountRate() * 100 + "%");
@@ -176,6 +180,7 @@ public class MemberCli {
 
                 int inputVal = Integer.parseInt(userInput);
                 double discountRate;
+                DiscountOptions selectedDiscountOption;
                 if (inputVal == 0) {
                     selectedDiscountOption = null;
                     discountRate = 1;
@@ -183,27 +188,21 @@ public class MemberCli {
                     selectedDiscountOption = discountOptionList.get(inputVal - 1);
                     discountRate = selectedDiscountOption.getDiscountRate();
                 }
+
+                // 최종 가격은 (티켓가격 * 티켓수)*할인률
+                int totalBalance = targetTickets.stream()
+                        .mapToInt(t -> t.getSeatGrade().getPrice())
+                        .sum();
+                totalBalance *= discountRate;
+
                 Payment payment = Payment.builder()
                         .member(member)
                         .selectedDiscountOptions(selectedDiscountOption)
                         .paymentCode(UUID.randomUUID().toString()) //임시 변수
                         .paymentTime(LocalDateTime.now())
+                        .totalBalance(totalBalance)    //좌석 가격에 할인률 적용
                         .build();
 
-                // 최종 가격은 (티켓가격 * 티켓수)*할인률
-                int totalBalance = targetTickets.stream()
-                        .filter(t -> t instanceof ReservedSeatNonpaidTicket)
-                        .map(t -> (ReservedSeatNonpaidTicket) t)
-                        .mapToInt(t -> t.getSeat().getGrade().getPrice())
-                        .sum();
-                totalBalance+=targetTickets.stream()
-                        .filter(t -> t instanceof FreeSeatNonpaidTicket)
-                        .map(t -> (FreeSeatNonpaidTicket) t)
-                        .mapToInt(t -> t.getSeat().getPrice())
-                        .sum();
-                totalBalance += discountRate;
-
-                payment.setTotalBalance(totalBalance);    //좌석 가격에 할인률 적용
                 paymentService.save(payment, targetTickets);     // 결제테이블에 결제 내용 insert
 
 //                // 결제 끝난고 실제 티켓 생성
@@ -218,7 +217,7 @@ public class MemberCli {
 //                        rsTicket[i].setSeat(rsNonpaidTickets[i].getSeat());
 //                    }
 //                    for(int i = 0; i < ticketNum; i++){
-//                        TicketApi.insert(rsTicket[i]);      // 티켓 테이블에 지정석 티켓 insert
+//                        TicketService.insert(rsTicket[i]);      // 티켓 테이블에 지정석 티켓 insert
 //                    }
 //                }
 //                else{
@@ -231,24 +230,26 @@ public class MemberCli {
 //                        fsTicket[i].setSeat(fsNonpaidTickets[i].getSeat());
 //                    }
 //                    for(int i = 0; i < ticketNum; i++){
-//                        TicketApi.insert(fsTicket[i]);      // 티켓 테이블에 자유석 티켓 insert
+//                        TicketService.insert(fsTicket[i]);      // 티켓 테이블에 자유석 티켓 insert
 //                    }
 //                }
 
-                //TODO: 일단 둠
+                //delivery 옵션
                 System.out.println("Choose delivery option");       // 실물티켓/ 온라인티켓 선택
                 System.out.println("0. delivery\n1. online");
                 userInput = scanner.next();
                 if (userInput.equals("0")) {        // 실물티켓의 경우 유저에게서 배달 정보를 입력받음
+                    List<Ticket> targets = ticketService.findByPayment(payment); //저장 확인을 겸함
                     //tuple[0].setIsOnline(false);
-                    System.out.print("Please enter delivery company: ");
-                    userInput = scanner.next();
-                    delivery.setDeliveryCompany(userInput);
+//                    System.out.print("Please enter delivery company: ");
+//                    userInput = scanner.next();
+//                    delivery.setDeliveryCompany(userInput);
                     System.out.print("Please enter delivery address: ");
                     userInput = scanner.next();
-                    delivery.setArrivalAddress(userInput);
-                    delivery.setDeliveryCode(String.valueOf(delivery.getId()));   // 배송 코드의 경우 일단 ID와 동일하게 지정
-                    DeliveryApi.insert(delivery);       // delivery 테이블에 입력받은 배송정보 insert
+                    deliveryService.save(targets, userInput);
+//                    delivery.setArrivalAddress(userInput);
+//                    delivery.setDeliveryCode(String.valueOf(delivery.getId()));   // 배송 코드의 경우 일단 ID와 동일하게 지정
+//                    DeliveryService.insert(delivery);       // delivery 테이블에 입력받은 배송정보 insert
                 }
                 //else tuple[0].setIsOnline(true);
             }
@@ -257,28 +258,34 @@ public class MemberCli {
                 //그냥 member 기준으로 ticket기록 긁어도 상관없는데...
                 List<Payment> searchPayment;
                 searchPayment = paymentService.findByMember(member);     // member의 결제 기록 가져오기
-                List<Ticket>[] searchTicket = new ArrayList[]{new ArrayList<>()};
-                for(int i = 0; i < searchPayment.size(); i++){
-                    searchTicket[i] = ticketService.findByPayment(searchPayment.get(i));  // 결제기록마다 구매한 티켓들 가져오기
-                }
+//                List<Ticket>[] searchTicket = new ArrayList[]{new ArrayList<>()};
+//                for(int i = 0; i < searchPayment.size(); i++){
+//                    searchTicket[i] = ticketService.findByPayment(searchPayment.get(i));  // 결제기록마다 구매한 티켓들 가져오기
+//                }
+                List<List<Ticket>> searchTicket = searchPayment.stream().map(ticketService::findByPayment).toList();
                 System.out.println("Purchased Tickets");
                 for(int i = 0; i < searchPayment.size(); i++){
-                    for(int j = 0; j < searchTicket[i].size(); j++){
-                        System.out.println("Concert: " + searchTicket[i].get(j).getConcertDate().getConcert().getConcertName());
-                        System.out.println("Concert Date: " + searchTicket[i].get(j).getConcertDate().getStartTime());
-                        System.out.println("Payment Date: " + searchTicket[i].get(j).getPayment().getPaymentTime());
-                        System.out.println("Price: " + searchTicket[i].get(j).getSeatGrade().getPrice() *
-                                Optional.ofNullable(searchTicket[i].get(j).getPayment().getSelectedDiscountOptions())
-                                        .orElse(DiscountOptions.builder().discountRate(1.0).build()).getDiscountRate());
-//                        System.out.println("ticket Id: " + searchTicket[i].get(j).getId());
-                        System.out.println("purchase time: " + searchTicket[i].get(j).getPurchaseTime());
-                        System.out.println("online ticket: " + searchTicket[i].get(j).getIsOnline());
+                    System.out.println("Payment Date: " + searchPayment.get(i).getPaymentTime());
+                    System.out.println("Total Balance: " + searchPayment.get(i).getTotalBalance());
+
+                    for (Ticket ticket : searchTicket.get(i)) {
+                        System.out.println("\tConcert: " + ticket.getConcertDate().getConcert().getConcertName());
+                        System.out.println("\tConcert Date: " + ticket.getConcertDate().getStartTime());
+                        System.out.println("\tPrice: " + (int) (ticket.getSeatGrade().getPrice() *
+                                Optional.ofNullable(ticket.getPayment().getSelectedDiscountOptions())
+                                        .orElse(DiscountOptions.builder().discountRate(1.0).build()).getDiscountRate()));
+                        System.out.println("\tPurchase time: " + ticket.getPurchaseTime());
+                        System.out.println("\tOnline ticket: " + ticket.getIsOnline());
+                        System.out.println();
                     }
                 }
                 break;
             case "2":
-                System.exit(0);
-                //TODO: 기록 보기 필요
+                return;
+            case "4":
+                //TODO: 결제 변경
+            case "5":
+                //TODO: 결제 기록 보기
         }
     }
 }

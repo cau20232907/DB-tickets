@@ -14,7 +14,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> findByPayment(Payment payment);
 
     @Query("select t from Ticket t join fetch t.concertDate d join fetch d.concert c" +
-            " join fetch t.payment p join fetch p.selectedDiscountOptions do where p=:payment")
+            " join fetch t.payment p left join fetch p.selectedDiscountOptions do where p=:payment")
     List<Ticket> findByPaymentFetchConcert(Payment payment);
 
     List<Ticket> findByConcertDate(ConcertDate concertDate);

@@ -28,4 +28,6 @@ public abstract class NonpaidTicket {
 //    @ManyToOne(fetch = FetchType.LAZY) //여러 티켓이 한 번에 배송될 수 있음
 //    private Delivery delivery;
     private LocalDateTime purchaseTime;
+
+    public abstract SeatGrade getSeatGrade();
 }

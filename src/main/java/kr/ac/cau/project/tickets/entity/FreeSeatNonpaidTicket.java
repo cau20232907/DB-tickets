@@ -18,4 +18,9 @@ import lombok.NoArgsConstructor;
 public class FreeSeatNonpaidTicket extends NonpaidTicket {
     @ManyToOne(fetch = FetchType.LAZY)
     private SeatGrade seat;
+
+    @Override
+    public SeatGrade getSeatGrade() {
+        return getSeat();
+    }
 }

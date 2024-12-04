@@ -26,7 +26,7 @@ public class TransactionQueue {
     @Id
     @GeneratedValue
     private Long id;
-    private LocalDateTime time;
+    private LocalDateTime time; //요청한 시간, 이게 ticket의 시간이 됨
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -35,7 +35,7 @@ public class TransactionQueue {
     private SeatGrade seatGrade;
     @ManyToOne(fetch = FetchType.LAZY)
     private Seat seat;
-    private LocalDateTime requestTime; //요청한 시간, 이게 ticket의 시간이 됨
+    //private LocalDateTime requestTime;
     //private Boolean isOnline;
 
     public List<TransactionQueue> copyBySeat(List<Seat> seats) {

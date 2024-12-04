@@ -17,7 +17,13 @@ public class NonpaidTicketService {
     private final NonpaidTicketRepository nonpaidTicketRepository;
     private final EachNonpaidTicketRepository eachNonpaidTicketRepository;
 
+    @Transactional(readOnly = true)
     public List<NonpaidTicket> findByMember(Member member) {
-        return nonpaidTicketRepository.findByMember(member);
+        //임시로 이렇게 처리
+        List<NonpaidTicket> tickets = nonpaidTicketRepository.findByMember(member);
+        for (NonpaidTicket ticket : tickets) {
+            ticket.getSeatGrade().getPrice();
+        }
+        return tickets;
     }
 }

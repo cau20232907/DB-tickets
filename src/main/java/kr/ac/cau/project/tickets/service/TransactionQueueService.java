@@ -16,7 +16,7 @@ public class TransactionQueueService {
     private final TransactionQueueRepository transactionQueueRepository;
 
     public void saveAll(List<TransactionQueue> transactionQueues) {
-        transactionQueues.forEach(data->data.setRequestTime(LocalDateTime.now()));
+        transactionQueues.forEach(data->data.setTime(LocalDateTime.now()));
         transactionQueueRepository.saveAll(transactionQueues);
     }
 
