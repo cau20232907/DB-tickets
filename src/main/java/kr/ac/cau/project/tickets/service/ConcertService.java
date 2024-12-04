@@ -20,6 +20,7 @@ public class ConcertService {
 
     public List<Concert> findAll() {
         return concertRepository.findAll();
+    }
 
     public List<Concert> findByStaff(EventStaff staff) {
         List<Concert> concerts = concertRepository.findByStaffOrderByCastsAsc(staff);

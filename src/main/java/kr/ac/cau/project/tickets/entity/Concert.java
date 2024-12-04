@@ -1,7 +1,6 @@
 package kr.ac.cau.project.tickets.entity;
 
 import jakarta.persistence.*;
-import kr.ac.cau.project.tickets.repository.ConcertDateRepository;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class Concert {
     private Stadium stadium;
     @ManyToOne(fetch = FetchType.LAZY)
     private EventStaff staff;
-    private String concertName;
+    private String name;
     private String explaination;
 
     @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL, orphanRemoval = true)

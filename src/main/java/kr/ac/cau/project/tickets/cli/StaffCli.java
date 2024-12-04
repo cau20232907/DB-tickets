@@ -97,7 +97,7 @@ public class StaffCli {
         } else{
             System.out.println("------ Managing concerts lists ------");
             for(Concert concert: concerts){     // concert ID 와 Name 을 모두 출력
-                System.out.println("ID: " + concert.getId() + ", Name: " + concert.getConcertName() +
+                System.out.println("ID: " + concert.getId() + ", Name: " + concert.getName() +
                         ", Stadium: " + concert.getStadium().getName());
 
                 List<Cast> casts = concert.getCasts();
@@ -137,7 +137,7 @@ public class StaffCli {
         }
 
         Concert concert = Concert.builder() // 새로 concert 객체 만들기
-                .concertName(newConcert)
+                .name(newConcert)
                 .explaination(newExplanation)
                 .staff(eventStaff)
                 .stadium(stadium)
@@ -207,7 +207,7 @@ public class StaffCli {
         System.out.println("------ Current Concert Info ------");
         System.out.println("Stadium: " + concert.getStadium().getName());
         System.out.println("Name: " + concert.getName());
-        System.out.println("Concert Name: " + concert.getConcertName());
+        System.out.println("Concert Name: " + concert.getName());
         System.out.println("Explanation: " + concert.getExplaination());
 
         // 새로 정보를 입력받아서 그 내용을 concert 데이터베이스에 적용한다.

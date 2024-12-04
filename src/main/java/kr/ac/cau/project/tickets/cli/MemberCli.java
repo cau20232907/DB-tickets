@@ -54,7 +54,7 @@ public class MemberCli {
                 concertList = concertService.findAll();      // 전체 공연 테이블 가져오기
                 for (int i = 0; i < concertList.size(); i++) {  // 공연 목록 보여주기
                     //concertList.get(i); //[i]
-                    System.out.println(i + ". " + concertList.get(i).getConcertName());
+                    System.out.println(i + ". " + concertList.get(i).getName());
                 }
                 userInput = scanner.next();       // 공연 선택
                 selectedConcert = concertList.get(Integer.parseInt(userInput));
@@ -269,7 +269,7 @@ public class MemberCli {
                     System.out.println("Total Balance: " + searchPayment.get(i).getTotalBalance());
 
                     for (Ticket ticket : searchTicket.get(i)) {
-                        System.out.println("\tConcert: " + ticket.getConcertDate().getConcert().getConcertName());
+                        System.out.println("\tConcert: " + ticket.getConcertDate().getConcert().getName());
                         System.out.println("\tConcert Date: " + ticket.getConcertDate().getStartTime());
                         System.out.println("\tPrice: " + (int) (ticket.getSeatGrade().getPrice() *
                                 Optional.ofNullable(ticket.getPayment().getSelectedDiscountOptions())

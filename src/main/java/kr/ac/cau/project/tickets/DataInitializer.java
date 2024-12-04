@@ -33,7 +33,7 @@ public class DataInitializer{
 
         Concert concert = new Concert();
         concert.setName("bts concert");
-        concert.setConcertName("bts concert");
+        concert.setName("bts concert");
         concert.setExplaination("no expl");
         concert.setStaff(eventStaff);
         concert.setStadium(stadium);
