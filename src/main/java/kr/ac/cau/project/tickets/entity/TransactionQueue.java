@@ -27,6 +27,8 @@ public class TransactionQueue {
     @ManyToOne(fetch = FetchType.LAZY)
     private ConcertDate concertDate;
     @ManyToOne(fetch = FetchType.LAZY)
+    private BaseballDate baseballDate;
+    @ManyToOne(fetch = FetchType.LAZY)
     private SeatGrade seatGrade;
     @ManyToOne(fetch = FetchType.LAZY)
     private Seat seat;
