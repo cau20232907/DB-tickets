@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @Builder
 public class TransactionQueueRecord {
     @Id
-    @GeneratedValue
     private Long id;
     private LocalDateTime time; //요청한 시간, 이게 ticket의 시간이 됨
     @ManyToOne(fetch = FetchType.LAZY)

@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Builder
 public class PaymentRecord {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
@@ -28,4 +28,8 @@ public class PaymentRecord {
     //일단 자리를 고르고 결제하기에, ticket 시간과 payment 시간이 다를 수 있음
     private LocalDateTime paymentTime;
     private int totalBalance;
+    //변경 시각
+    private LocalDateTime changeTime;
+    //이 시간 이후에 지워졌는가
+    private Boolean deleted;
 }

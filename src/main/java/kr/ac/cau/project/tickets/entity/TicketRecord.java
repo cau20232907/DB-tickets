@@ -18,16 +18,16 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public abstract class TicketRecord {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
-    private Payment payment;
+    private PaymentRecord payment;
     @ManyToOne(fetch = FetchType.LAZY)
     private ConcertDate concertDate;
     private LocalDateTime purchaseTime;
     private Boolean isOnline;
     @ManyToOne(fetch = FetchType.LAZY) //여러 티켓이 한 번에 배송될 수 있음
-    private Delivery delivery;
+    private DeliveryRecord delivery;
 
     public abstract SeatGrade getSeatGrade();
 }
