@@ -87,10 +87,11 @@ public class MemberCli {
                             isFree = selectedSeatGrade.getIsFree();
                         }
 
+                        TicketPurchaseLimit ticketPurchaseLimit = ticketService.getTicketPurchaseLimit();
                         int ticketNum;      // 선택한 티켓 개수, 최대 4개까지
                         String[] seatNums = null;
                         if (!isFree) {       // 지정석 티켓의 경우 좌석을 직접 고르게 함
-                            System.out.println("Choose seat (Maximum 4)");
+                            System.out.println("Choose seat (Maximum " + ticketPurchaseLimit.getValue() + ")");
                             //seatList = seatService.findByGrade(selectedSeatGrade); // 전체 좌석 가져오기
                             {
                                 //미예약된 좌석만 분류하는 과정
@@ -104,13 +105,13 @@ public class MemberCli {
                             seatNums = userInput.split(" ");
                             ticketNum = seatNums.length;
                         } else {           // 자유석 티켓의 경우 좌석 개수만 고르게 함
-                            System.out.println("Choose number of seats (Maximum 4)");
+                            System.out.println("Choose number of seats (Maximum " + ticketPurchaseLimit.getValue() + ")");
                             userInput = scanner.next();
                             ticketNum = Integer.parseInt(userInput);
                         }
 
-                        if (ticketNum > 4) {
-                            System.out.println("Only up to 4 tickets available.");
+                        if (ticketNum > ticketPurchaseLimit.getValue()) {
+                            System.out.println("Only up to " + ticketPurchaseLimit.getValue() + " tickets available.");
                             break;
                         }
 

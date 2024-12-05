@@ -57,8 +57,10 @@ public class TicketsApplication implements CommandLineRunner {
 				}
 			} else if (user1 instanceof Member member1) {
 				memberCli.run(member1);
-			} else if (user1 instanceof EventStaff staff){
+			} else if (user1 instanceof EventStaff staff) {
 				staffCli.run(staff);
+			} else {
+				System.out.println("Not on service for now.");
 			}
 		}
 	}
