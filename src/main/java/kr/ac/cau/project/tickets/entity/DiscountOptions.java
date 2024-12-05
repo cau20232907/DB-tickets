@@ -1,5 +1,6 @@
 package kr.ac.cau.project.tickets.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -18,5 +19,6 @@ public class DiscountOptions {
     @GeneratedValue
     private Long id;
     private String type;
+    @Column(columnDefinition = "DECIMAL(4,3)")
     private double discountRate;
 }

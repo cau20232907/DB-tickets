@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public abstract class Ticket {
     @Id
-    @GeneratedValue
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     private Payment payment;
