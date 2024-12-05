@@ -299,7 +299,7 @@ DROP TABLE IF EXISTS `discount_options`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `discount_options` (
-  `discount_rate` decimal(4,3) NOT NULL,
+  `discount_rate` decimal(4,3) DEFAULT NULL,
   `id` bigint NOT NULL,
   `type` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -927,6 +927,29 @@ INSERT INTO `stadium_seq` VALUES (1);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `temporal_member`
+--
+
+DROP TABLE IF EXISTS `temporal_member`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `temporal_member` (
+  `id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `FKm5qu4ynhlawrd6uq9omdbl6` FOREIGN KEY (`id`) REFERENCES `userinfo` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `temporal_member`
+--
+
+LOCK TABLES `temporal_member` WRITE;
+/*!40000 ALTER TABLE `temporal_member` DISABLE KEYS */;
+/*!40000 ALTER TABLE `temporal_member` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `ticket`
 --
 
@@ -958,6 +981,29 @@ LOCK TABLES `ticket` WRITE;
 /*!40000 ALTER TABLE `ticket` DISABLE KEYS */;
 INSERT INTO `ticket` VALUES (_binary '\0',1,1,1,1,'2024-12-05 05:57:28.175919'),(_binary '\0',1,1,2,1,'2024-12-05 05:57:28.175919');
 /*!40000 ALTER TABLE `ticket` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ticket_purchase_limit`
+--
+
+DROP TABLE IF EXISTS `ticket_purchase_limit`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ticket_purchase_limit` (
+  `value` int NOT NULL,
+  PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ticket_purchase_limit`
+--
+
+LOCK TABLES `ticket_purchase_limit` WRITE;
+/*!40000 ALTER TABLE `ticket_purchase_limit` DISABLE KEYS */;
+INSERT INTO `ticket_purchase_limit` VALUES (4);
+/*!40000 ALTER TABLE `ticket_purchase_limit` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1176,6 +1222,55 @@ LOCK TABLES `userinfo` WRITE;
 /*!40000 ALTER TABLE `userinfo` DISABLE KEYS */;
 INSERT INTO `userinfo` VALUES (3,'new'),(4,'john'),(5,'staff'),(6,'man');
 /*!40000 ALTER TABLE `userinfo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `userinfo_login_record`
+--
+
+DROP TABLE IF EXISTS `userinfo_login_record`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `userinfo_login_record` (
+  `id` bigint NOT NULL,
+  `userinfo_id` bigint DEFAULT NULL,
+  `time` datetime(6) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `userinfo_id_idx` (`userinfo_id`),
+  CONSTRAINT `userinfo_id` FOREIGN KEY (`userinfo_id`) REFERENCES `userinfo` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `userinfo_login_record`
+--
+
+LOCK TABLES `userinfo_login_record` WRITE;
+/*!40000 ALTER TABLE `userinfo_login_record` DISABLE KEYS */;
+INSERT INTO `userinfo_login_record` VALUES (1,4,'2024-12-05 16:50:43.332781');
+/*!40000 ALTER TABLE `userinfo_login_record` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `userinfo_login_record_seq`
+--
+
+DROP TABLE IF EXISTS `userinfo_login_record_seq`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `userinfo_login_record_seq` (
+  `next_val` bigint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `userinfo_login_record_seq`
+--
+
+LOCK TABLES `userinfo_login_record_seq` WRITE;
+/*!40000 ALTER TABLE `userinfo_login_record_seq` DISABLE KEYS */;
+INSERT INTO `userinfo_login_record_seq` VALUES (51);
+/*!40000 ALTER TABLE `userinfo_login_record_seq` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1593,4 +1688,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-05 10:16:13
+-- Dump completed on 2024-12-05 16:53:03

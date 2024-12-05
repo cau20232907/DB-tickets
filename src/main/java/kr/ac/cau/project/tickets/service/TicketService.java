@@ -1,11 +1,9 @@
 package kr.ac.cau.project.tickets.service;
 
-import kr.ac.cau.project.tickets.entity.ConcertDate;
-import kr.ac.cau.project.tickets.entity.Payment;
-import kr.ac.cau.project.tickets.entity.ReservedSeatTicket;
-import kr.ac.cau.project.tickets.entity.Ticket;
+import kr.ac.cau.project.tickets.entity.*;
 import kr.ac.cau.project.tickets.repository.EachTicketRepository;
 import kr.ac.cau.project.tickets.repository.ReservedTicketRepository;
+import kr.ac.cau.project.tickets.repository.TicketPurchaseLimitRepository;
 import kr.ac.cau.project.tickets.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +18,7 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final EachTicketRepository eachTicketRepository;
     private final ReservedTicketRepository reservedTicketRepository;
+    private final TicketPurchaseLimitRepository ticketPurchaseLimitRepository;
 
     public List<Ticket> findByPayment(Payment payment) {
         List<Ticket> result = ticketRepository.findByPaymentFetchConcert(payment);
@@ -46,5 +45,12 @@ public class TicketService {
             ticket.getSeatGrade();
         }
         return result;
+    }
+
+    public TicketPurchaseLimit getTicketPurchaseLimit() {
+        List<TicketPurchaseLimit> all = ticketPurchaseLimitRepository.findAll();
+        if (all.size() == 0) {
+            return TicketPurchaseLimit.builder().value(4).build();
+        } else return all.getFirst();
     }
 }
